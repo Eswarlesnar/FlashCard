@@ -1,8 +1,12 @@
 import express , {Request , Response} from "express";
+import * as dotenv from "dotenv"
 import mongoose from "mongoose";
 import DeckModel from "./models/Deck";
 
+dotenv.config({ path: "src"+'/.env' });
 const app = express()
+
+const PORT = process.env.PORT
 
 app.use(express.json())
 
@@ -30,9 +34,8 @@ app.post("/decks" , async (req : Request , res : Response) => {
 app.get("/decks" , (req : Request , res :Response) => {
     res.send("See the decks")
 })
-
-mongoose.connect("mongodb+srv://Oruganti-E:OYjOjDC5DrwZl53E@cluster0.mmfayp2.mongodb.net/?retryWrites=true&w=majority")
+mongoose.connect(process.env.MONGO_URL!)
 .then(()=>{
-    console.log("listerning on port 5000") 
-    app.listen(5000)
+    console.log(`listerning on port ${PORT}`) 
+    app.listen(PORT)
 })
