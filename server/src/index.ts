@@ -1,14 +1,16 @@
 import express , {Request , Response} from "express";
+import cors from "cors"
 import * as dotenv from "dotenv"
 import mongoose from "mongoose";
 import DeckModel from "./models/Deck";
 
 dotenv.config({ path: "src"+'/.env' });
 const app = express()
-
 const PORT = process.env.PORT
 
 app.use(express.json())
+
+app.use(cors())
 
 app.get("/" , (req :Request, res : Response) => {
     res.send("Hi welcome to your server")
@@ -31,11 +33,12 @@ app.post("/decks" , async (req : Request , res : Response) => {
     res.json(response)
 })
 
-app.get("/decks" , (req : Request , res :Response) => {
-    res.send("See the decks")
+app.get("/decks" , async (req : Request , res :Response) => {
+    let allValues = await DeckModel.find({})
+    res.send(allValues)
 })
 mongoose.connect(process.env.MONGO_URL!)
 .then(()=>{
-    console.log(`listerning on port ${PORT}`) 
+    console.log(`listening on port ${PORT}`) 
     app.listen(PORT)
 })
